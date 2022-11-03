@@ -31,7 +31,7 @@ const assetsFolderDestination = path.join(projectFolder, 'assets')
                         let replace = `{{${result[i]}}}` // make replace query
                         let query = new RegExp(replace, "g")
                         fullData = fullData.replace(query, data) // replace template
-                        fs.promises.writeFile(projectIndexFile, fullData) // rewrite destination file and save full result
+                       fs.promises.writeFile(projectIndexFile, fullData) // rewrite destination file and save full result
                     })
                 })()
             }
