@@ -7,9 +7,9 @@ const projectIndexFile = path.join(projectFolder, 'index.html')
 const projectStyleFile = path.join(projectFolder, 'style.css')
 const componentsFolder = path.join(__dirname, 'components')
 const assetsFolderSource = path.join(__dirname, 'assets')
-const assetsFolderDestination = path.join(projectFolder, 'assets');
+const assetsFolderDestination = path.join(projectFolder, 'assets')
 
-(async function () {
+;(async function () {
     // create project directory
     await fs.promises.mkdir(projectFolder, {recursive: true})
     //create style.css in destination folder
@@ -25,13 +25,15 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
         let file = result[i] + '.html'
         templateFiles.forEach(el => {
             if (path.extname(el) === '.html' && el === file) { // ir we have a file and file is html and our template name equal of file name
-                    fs.readFile(path.join(componentsFolder, el), 'utf-8', (err, data) => { // read template file
+                (async function () {
+                    await fs.readFile(path.join(componentsFolder, el), 'utf-8', (err, data) => { // read template file
                         if (err) throw err
                         let replace = `{{${result[i]}}}` // make replace query
                         let query = new RegExp(replace, "g")
                         fullData = fullData.replace(query, data) // replace template
                        fs.promises.writeFile(projectIndexFile, fullData) // rewrite destination file and save full result
                     })
+                })()
             }
         })
     }
@@ -54,10 +56,13 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
     const styleFiles = await fs.promises.readdir(path.join(__dirname, 'styles'), 'utf-8')
     styleFiles.forEach(el => {
         if (path.extname(el) === '.css') {
-                fs.readFile(path.join(path.join(__dirname, 'styles'), el), 'utf-8', (err, data) => {
+            (async function () {
+                await fs.readFile(path.join(path.join(__dirname, 'styles'), el), 'utf-8', (err, data) => {
                     if (err) throw err
-                    fs.promises.appendFile(projectStyleFile, data)
+                    fs.promises.appendFile(projectStyleFile, "\n"+data)
                 })
+
+            })()
         }
     })
 
