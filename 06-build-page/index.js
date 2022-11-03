@@ -45,7 +45,6 @@ const assetsFolderDestination = path.join(projectFolder, 'assets')
 
     // styles
     const styleFiles = await fs.promises.readdir(path.join(__dirname, 'styles'), 'utf-8')
-    let stylesData = ''
     styleFiles.forEach(el => {
         if (path.extname(el) === '.css') {
             (async function () {
