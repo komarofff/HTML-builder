@@ -7,9 +7,9 @@ const projectIndexFile = path.join(projectFolder, 'index.html')
 const projectStyleFile = path.join(projectFolder, 'style.css')
 const componentsFolder = path.join(__dirname, 'components')
 const assetsFolderSource = path.join(__dirname, 'assets')
-const assetsFolderDestination = path.join(projectFolder, 'assets')
+const assetsFolderDestination = path.join(projectFolder, 'assets');
 
-;(async function () {
+(async function () {
     // create project directory
     await fs.promises.mkdir(projectFolder, {recursive: true})
     //create style.css in destination folder
@@ -31,7 +31,7 @@ const assetsFolderDestination = path.join(projectFolder, 'assets')
                         let replace = `{{${result[i]}}}` // make replace query
                         let query = new RegExp(replace, "g")
                         fullData = fullData.replace(query, data) // replace template
-                        fs.promises.writeFile(projectIndexFile, fullData) // rewrite destination file and save full result
+                       fs.promises.writeFile(projectIndexFile, fullData) // rewrite destination file and save full result
                     })
                 })()
             }
@@ -44,11 +44,11 @@ const assetsFolderDestination = path.join(projectFolder, 'assets')
     const assetSourceData = await fs.promises.readdir(assetsFolderSource)
     assetSourceData.forEach(el => {
         fs.promises.mkdir(path.join(assetsFolderDestination, el), {recursive: true})
-        fs.readdir(path.join(assetsFolderSource, el), 'utf-8', (err, data) => {
-            data.forEach(elem => {
-                fs.promises.copyFile(path.join(path.join(assetsFolderSource, el), elem), path.join(path.join(assetsFolderDestination, el), elem)) // копируем файлы
+            fs.readdir(path.join(assetsFolderSource, el), 'utf-8', (err, data) => {
+                data.forEach(elem => {
+                    fs.promises.copyFile(path.join(path.join(assetsFolderSource, el), elem), path.join(path.join(assetsFolderDestination, el), elem)) // копируем файлы
+                })
             })
-        })
     })
 
     // styles
