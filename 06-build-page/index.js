@@ -25,15 +25,13 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
         let file = result[i] + '.html'
         templateFiles.forEach(el => {
             if (path.extname(el) === '.html' && el === file) { // ir we have a file and file is html and our template name equal of file name
-                (async function () {
-                    await fs.readFile(path.join(componentsFolder, el), 'utf-8', (err, data) => { // read template file
+                    fs.readFile(path.join(componentsFolder, el), 'utf-8', (err, data) => { // read template file
                         if (err) throw err
                         let replace = `{{${result[i]}}}` // make replace query
                         let query = new RegExp(replace, "g")
                         fullData = fullData.replace(query, data) // replace template
                        fs.promises.writeFile(projectIndexFile, fullData) // rewrite destination file and save full result
                     })
-                })()
             }
         })
     }
@@ -56,13 +54,10 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
     const styleFiles = await fs.promises.readdir(path.join(__dirname, 'styles'), 'utf-8')
     styleFiles.forEach(el => {
         if (path.extname(el) === '.css') {
-            (async function () {
-                await fs.readFile(path.join(path.join(__dirname, 'styles'), el), 'utf-8', (err, data) => {
+                fs.readFile(path.join(path.join(__dirname, 'styles'), el), 'utf-8', (err, data) => {
                     if (err) throw err
                     fs.promises.appendFile(projectStyleFile, data)
                 })
-
-            })()
         }
     })
 
