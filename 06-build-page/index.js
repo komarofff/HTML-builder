@@ -45,8 +45,8 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
         const assetSourceData = await fs.promises.readdir(assetsFolderSource)
         assetSourceData.forEach(el => {
             fs.promises.mkdir(path.join(assetsFolderDestination, el), {recursive: true})
-            fs.readdir(path.join(assetsFolderSource, el), 'utf-8', async (err, data) => {
-                await data.forEach(elem => {
+            fs.readdir(path.join(assetsFolderSource, el), 'utf-8',  (err, data) => {
+                 data.forEach(elem => {
                     fs.promises.copyFile(path.join(path.join(assetsFolderSource, el), elem), path.join(path.join(assetsFolderDestination, el), elem)) // копируем файлы
                 })
             })
@@ -58,9 +58,9 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
         styleFiles.forEach(el => {
             if (path.extname(el) === '.css') {
                 (async function () {
-                    await fs.readFile(path.join(path.join(__dirname, 'styles'), el), 'utf-8', async (err, data) => {
+                    await fs.readFile(path.join(path.join(__dirname, 'styles'), el), 'utf-8',  (err, data) => {
                         if (err) throw err
-                        await fs.promises.appendFile(projectStyleFile, "\n" + data)
+                         fs.promises.appendFile(projectStyleFile, "\n" + data)
                     })
 
                 })()
