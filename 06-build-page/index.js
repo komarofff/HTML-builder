@@ -45,16 +45,13 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
     // create assets folder in project folder and copy all files to destination folder
     await fs.access(assetsFolderDestination, (err) => {
         if (err) {
-           // console.log('net directory')
             putDataToAssetsFolder()
         } else {
-            //console.log('directory is here')
             fs.rm(assetsFolderDestination, {recursive: true}, err => {
                 if (err) {
                     throw err
                 }
 
-                console.log(`${assetsFolderDestination} is deleted!`)
                 putDataToAssetsFolder()
 
             })
