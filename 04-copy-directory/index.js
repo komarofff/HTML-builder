@@ -1,4 +1,3 @@
-
 const fs = require('fs')
 const path = require('path')
 const startDirectory = path.join(__dirname, 'files') // source directory
@@ -14,7 +13,8 @@ fs.stat(finishDirectory, function (err) { // проверяем есть ли de
                             if (err) console.log(err)
                         })
                     }
-                    fs.rmdir(finishDirectory,()=>{}) // удаляем папку
+                    fs.rmdir(finishDirectory, () => {}) // удаляем папку
+                     fs.promises.mkdir(finishDirectory, {recursive: true})
                     copyFiles() // запускаем функцию создания папки заново и копирования файлов
                 }
             })
@@ -23,17 +23,14 @@ fs.stat(finishDirectory, function (err) { // проверяем есть ли de
     } else if (err.code === 'ENOENT') { // если папки нет -  запускаем функцию создания папки заново и копирования файлов
         copyFiles()
     }
-})
+});
 
 async function copyFiles() {
-  await  fs.mkdir(finishDirectory, {recursive: true},(err)=>{ // создаем папку назначения
-      if(!err){
-          fs.readdir(startDirectory, (err, files) => { // читаем папку исходник
-              for (let i = 0; i < files.length; i++) {
-                 fs.copyFile(path.join(startDirectory, files[i]), path.join(finishDirectory, files[i]),()=>{}) // копируем файлы
-              }
-          })
-      }
-  })
-
+    await fs.promises.mkdir(finishDirectory, {recursive: true}) // создаем папку назначения
+    const files = await fs.promises.readdir(startDirectory,{withFileTypes: true}) // читаем папку исходник
+    for (let file of files) {
+        if(file.isFile()) {
+            await fs.copyFile(path.join(startDirectory, file.name), path.join(finishDirectory, file.name),()=>{}) // копируем файлы
+        }
+     }
 }
