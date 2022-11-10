@@ -3,7 +3,9 @@ const path = require('path')
 const styles = path.join(__dirname, 'styles') // папка стилей
 const distFolder = path.join(__dirname, 'project-dist') // папка назначения
 const distFile = path.join(distFolder, 'bundle.css'); // файл в который собираем все стили
+
 (async function () {
+  await  fs.promises.writeFile(distFile,'')
     await fs.readdir(styles, (err, files) => { // читаем папку стилей
         for (let i = 0; i < files.length; i++) {// перебираем файлы
             if (path.extname(files[i]) === '.css') { // если расширение css

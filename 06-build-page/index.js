@@ -69,7 +69,7 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
             })
         })
     }
-  
+
 
     // styles
     // read style folder and if file is css read file and put data to destination style.css file
