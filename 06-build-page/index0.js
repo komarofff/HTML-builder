@@ -19,12 +19,12 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
 
     const templateData = await fs.promises.readFile(template, 'utf-8') // read template file
     let fullData = templateData
-    let result = templateData.match(/({{\w+}})/g).map(el => el.replace('{{', '').replace('}}', '')) // get names of including templates in file
+    let result = templateData.match(/({{(.*?)}})/g).map(el => el.replace('{{', '').replace('}}', '')) // get names of including templates in file
     const templateFiles = await fs.promises.readdir(componentsFolder, 'utf-8') // read template directory
     result.forEach((element, idx, result) => {
         let file = element + '.html'
         templateFiles.forEach(el => {
-            if (path.extname(el) === '.html' && el === file) { // if we have a file and file is html and our template name equal of file name
+            if (path.extname(el) === '.html' ) { // if we have a file and file is html and our template name equal of file name
                 (async function () {
                     let data = await fs.promises.readFile(path.join(componentsFolder, el), 'utf-8') // read template file
                     let replace = `{{${element}}}` // make replace query
@@ -32,6 +32,7 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
                     fullData = fullData.replace(query, data) // replace template
                     return fullData
                 })().then(response => {
+                    console.log(response)
                     if (idx === result.length - 1) { // when we finish search and replace
                         fs.promises.writeFile(projectIndexFile, response) // rewrite destination file and save full result
                     }
@@ -43,16 +44,33 @@ const assetsFolderDestination = path.join(projectFolder, 'assets');
 
     // copy assets folder
     // create assets folder in project folder and copy all files to destination folder
-    await fs.promises.mkdir(assetsFolderDestination, {recursive: true})
-    const assetSourceData = await fs.promises.readdir(assetsFolderSource)
-    assetSourceData.forEach(el => {
-        fs.promises.mkdir(path.join(assetsFolderDestination, el), {recursive: true})
-        fs.readdir(path.join(assetsFolderSource, el), 'utf-8', (err, data) => {
-            data.forEach(elem => {
-                fs.promises.copyFile(path.join(path.join(assetsFolderSource, el), elem), path.join(path.join(assetsFolderDestination, el), elem)) // копируем файлы
+    await fs.access(assetsFolderDestination, (err) => {
+        if (err) {
+            putDataToAssetsFolder()
+        } else {
+            fs.rm(assetsFolderDestination, {recursive: true}, err => {
+                if (err) {
+                    throw err
+                }
+
+                putDataToAssetsFolder()
+
+            })
+        }
+    })
+    async function putDataToAssetsFolder() {
+        await fs.promises.mkdir(assetsFolderDestination, {recursive: true})
+        const assetSourceData = await fs.promises.readdir(assetsFolderSource)
+        assetSourceData.forEach(el => {
+            fs.promises.mkdir(path.join(assetsFolderDestination, el), {recursive: true})
+            fs.readdir(path.join(assetsFolderSource, el), 'utf-8', (err, data) => {
+                data.forEach(elem => {
+                    fs.promises.copyFile(path.join(path.join(assetsFolderSource, el), elem), path.join(path.join(assetsFolderDestination, el), elem)) // копируем файлы
+                })
             })
         })
-    })
+    }
+
 
     // styles
     // read style folder and if file is css read file and put data to destination style.css file
